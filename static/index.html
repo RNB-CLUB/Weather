@@ -10,14 +10,25 @@
 </head>
 
 <body>
-    <main>
-        <header>
-            <h1>London</h1>
-        </header>
-    </main>
-    <footer>
-        <h3>ROBOCODE komanda_pogodga @ created with API</h3>
-    </footer>
+    <div class="widget">
+        <div class="header">
+            <h2>London</h2>
+        </div>
+
+        <div class="widget-main">
+            <div class="current-weather">
+                <h3>Tonight</h3>
+                <div class="current-infa">
+                    <img class="icon">
+                    <div class="current-temp">
+                        <span class="value" id="cur.-low">28</span>
+                    </div>
+                    <div class="current-desc">Sunny, no rain</div>
+                </div>
+            </div>
+        </div>
+        <div class="forecast-days" id="forecast-days-container"></div>
+    </div>
 </body>
 
 </html>
