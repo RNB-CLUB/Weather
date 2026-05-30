@@ -1,0 +1,23 @@
+{
+  "name": "weather",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "dev": "echo \"Error: no test specified\" && exit 1",
+    "start": ""
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RNB-CLUB/Weather.git"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RNB-CLUB/Weather/issues"
+  },
+  "homepage": "https://github.com/RNB-CLUB/Weather#readme"
+}
