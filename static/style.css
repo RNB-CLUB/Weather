@@ -3,17 +3,24 @@
     padding: 0;
     box-sizing: border-box;
 }
-
-header {}
-
-main {}
-
-h1 {
+body {
+    min-height: 100vh;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+}
+main {
+    text-align: center;
+    flex-grow: 1;
 }
 
 footer {
-    
+    background-color: black;
+    padding: 0.5rem;
+
+}
+
+h3 {
+    color: white;
+    font-size: 15px;
+    text-align: center;
 }
