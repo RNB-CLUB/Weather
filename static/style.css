@@ -1,0 +1,19 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header {}
+
+main {}
+
+h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+footer {
+    
+}
