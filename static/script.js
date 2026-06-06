@@ -2,6 +2,17 @@ const button = document.getElementById("getWeatherBtn");
 const input = document.getElementById("cityInput");
 const resultDiv = document.getElementById("result");
 
+
+let weather;
+fetch(base_url + "&q=london").then(res => res.json()).then(data => {
+    weather = data
+    updateWeather()
+}
+)
+
+function updateWeather() {
+    document.querySelector(".current-weather .icon").setAttribute("src", weather.current.condition.icon)
+}
 button.addEventListener("click", async () => {
   const cityName = input.value.trim();
 

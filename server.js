@@ -1,45 +1,56 @@
-import express from 'express';
-import http from 'http';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { createServer } from "http";
+import { readFile } from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const app = express();
-const server = http.createServer(app); 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const API_KEY = "a85e06d2a31c43d9bc4135230263005";
+const server = createServer(async (req, res) => {
+    if (req.url.startsWith("/api/weather")) {
+        const url = new URL(req.url, `http://${req.headers.host}`);
+        const city = url.searchParams.get("city");
 
-app.use(express.static(path.join(__dirname, 'static')));
+        try {
+            const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}`);
+            const data = await response.json();
 
-app.get('/api/weather', async (req, res) => {
-    const city = req.query.city;
+            if (!response.ok) {
+                res.statusCode = response.status;
+                return res.end(JSON.stringify({ message: data.error.message }));
+            }
 
-    if (!city) {
-        return res.status(400).json({ error: 'Вы не ввели город!' });
-    }
+            const result = {
+                city: data.location.name,
+                temp: data.current.temp_c,
+                description: data.current.condition.text,
+                icon: data.current.condition.icon
+            };
 
-    const api_key = 'a85e06d2a31c43d9bc4135230263005'; 
-    const url = `https://api.weatherapi.com/v1/current.json?key=${api_key}&q=${city}&aqi=no&lang=ru`;
-
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-
-        if (!response.ok) {
-            return res.status(response.status).json({ message: data.error.message });
+            res.setHeader("Content-Type", "application/json");
+            res.end(JSON.stringify(result));
+        } catch (err) {
+            res.statusCode = 500;
+            res.end(JSON.stringify({ message: "Помилка сервера" }));
         }
+    }
+    else {
+        // Логіка для віддачі головної сторінки (index.html)
+        const filePath = req.url === "/" ? "./index.html" : `.${req.url}`;
+        try {
+            const data = await readFile(filePath);
+            const ext = path.extname(filePath);
+            const contentType = ext === ".css" ? "text/css" :
+                ext === ".js" ? "text/javascript" : "text/html";
 
-        res.json({
-            city: data.location.name,
-            temp: data.current.temp_c,
-            description: data.current.condition.text,
-            icon: data.current.condition.icon
-        });
-
-    } catch (error) {
-        res.status(500).json({ message: 'Ошибка' });
+            res.setHeader("Content-Type", contentType);
+            res.end(data);
+        } catch {
+            res.statusCode = 404;
+            res.end("Файл не знайдено");
+        }
     }
 });
 
 server.listen(3000, () => {
-    console.log(`Сервер запущен`);
+    console.log("Сервер запущен");
 });
