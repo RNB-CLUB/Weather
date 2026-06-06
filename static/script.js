@@ -49,6 +49,7 @@ async function getWeather() {
             <p style="font-size: 24px;">${Math.round(data.current.temp_c)}°C</p>
             <p>${data.current.condition.text}</p>
             <p>Вологість: ${data.current.humidity}%</p>
+            <p>Хмарність: ${data.current.cloud}%</p>
         `;
     } catch (error) {
         console.error(error);
