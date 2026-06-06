@@ -4,3 +4,10 @@
     box-sizing: border-box;
 }
 
+body {
+    background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+

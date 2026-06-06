@@ -8,25 +8,22 @@
     <script src="script.js" defer></script>
   </head>
 <body>
-    <div class="widget">
-        <div class="header">
-            <h2>London</h2>
-        </div>
+    <div class="container">
+        <h1>Weather</h1>
+        <div class="search-box"></div>
+            <input type="text" id="searchInput" placeholder="Введіть місто..." autocomplete="off" list="cities">
+            <datalist id="cities">
+                <option value="Kyiv">Kyiv</option>
+                <option value="Lviv">Lviv</option>
+                <option value="Odesa">Odesa</option>
+                <option value="Kharkiv">Kharkiv</option>
+            </datalist>
 
-        <div class="widget-main">
-            <div class="current-weather">
-                <h3>Tonight</h3>
-                <div class="current-infa">
-                    <img class="icon">
-                    <div class="current-temp">
-                        <span class="value" id="cur.-low">28</span>
-                    </div>
-                    <div class="current-desc">Sunny, no rain</div>
-                </div>
-            </div>
-        </div>
-        <div class="forecast-days" id="forecast-days-container"></div>
+            <button onclick="getWeather()">Отримати погоду</button>
     </div>
+    <div class="error"></div>
+    <div class="weather"></div>
+    <div class="forecast"></div>
 </body>
 
 </html>
