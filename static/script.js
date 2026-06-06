@@ -2,7 +2,6 @@ const button = document.getElementById("getWeatherBtn");
 const input = document.getElementById("cityInput");
 const resultDiv = document.getElementById("result");
 
-<<<<<<< HEAD
 
 let weather;
 fetch(base_url + "&q=london").then(res => res.json()).then(data => {
@@ -14,7 +13,6 @@ fetch(base_url + "&q=london").then(res => res.json()).then(data => {
 function updateWeather() {
     document.querySelector(".current-weather .icon").setAttribute("src", weather.current.condition.icon)
 }
-=======
 button.addEventListener("click", async () => {
   const cityName = input.value.trim();
 
@@ -45,4 +43,3 @@ button.addEventListener("click", async () => {
     resultDiv.innerHTML = "Не удалось связаться с сервером";
   }
 });
->>>>>>> fc9cff7fc19364aadbeba3e1c5ac0742e7f7f814
