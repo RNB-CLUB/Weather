@@ -1,4 +1,8 @@
 const themeToggle = document.getElementById('theme-toggle');
+const searchInput = document.getElementById('searchInput');
+const datalist = document.getElementById('cities');
+const weatherDiv = document.querySelector('.weather');
+const errorDiv = document.querySelector('.error');
 
 const savedTheme = localStorage.getItem('theme') || 'light';
 document.documentElement.setAttribute('data-theme', savedTheme);
@@ -10,18 +14,14 @@ themeToggle.addEventListener('change', () => {
     localStorage.setItem('theme', newTheme);
 });
 
-const API_KEY = "a85e06d2a31c43d9bc4135230263005";
-const searchInput = document.getElementById('searchInput');
-const datalist = document.getElementById('cities');
-
 async function searchCities() {
     const city = searchInput.value;
     if (city.length < 3) return;
 
     try {
-        const url = `https://api.weatherapi.com/v1/search.json?q=${city}&key=${API_KEY}`;
+        const url = `https://api.weatherapi.com/v1/search.json?q=${city}&key=a85e06d2a31c43d9bc4135230263005`;
         const response = await fetch(url);
-        if (!response.ok) throw new Error("Помилка запиту");
+        if (!response.ok) throw new Error("Помилка");
 
         const data = await response.json();
         datalist.innerHTML = '';
@@ -48,8 +48,6 @@ searchInput.addEventListener('input', debounce(searchCities, 500));
 
 async function getWeather() {
     const city = searchInput.value;
-    const weatherDiv = document.querySelector('.weather');
-    const errorDiv = document.querySelector('.error');
 
     if (!city) {
         errorDiv.textContent = "Будь ласка, введіть назву міста";
@@ -57,34 +55,39 @@ async function getWeather() {
     }
 
     try {
-        const url = `https://api.weatherapi.com/v1/current.json?q=${city}&key=${API_KEY}&lang=uk`;
+        const url = `https://api.weatherapi.com/v1/current.json?q=${city}&key=a85e06d2a31c43d9bc4135230263005&lang=uk`;
         const response = await fetch(url);
 
         if (!response.ok) throw new Error("Місто не знайдено");
 
         const data = await response.json();
-document.querySelector('.weather').innerHTML = `
-    <div class="weather-header">
-        <h2>Погода в ${data.location.name}</h2>
-    </div>
-    <div class="weather-content">
-        <div class="weather-left">
-            <img src="https:${data.current.condition.icon}" alt="weather" style="width: 100px;">
-            <p style="font-size: 40px; font-weight: bold;">${Math.round(data.current.temp_c)}°C</p>
-            <p>${data.current.condition.text}</p>
-        </div>
-        <div class="weather-right">
-            <p>Відчувається як: ${Math.round(data.current.feelslike_c)}°C</p>
-            <p>Вітер: ${data.current.wind_kph} км/год (${data.current.wind_dir})</p>
-            <p>Вологість: ${data.current.humidity}%</p>
-            <p>Ймовірність дощу: ${data.current.chance_of_rain}%</p>
-            <p>Тиск: ${data.current.pressure_mb} мбар</p>
-            <p>Видимість: ${data.current.vis_km} км</p>
-        </div>
-    </div>
-`;
+        errorDiv.textContent = ""; 
+        
+        weatherDiv.innerHTML = `
+            <div class="weather-header">
+                <h2>Погода в ${data.location.name}</h2>
+            </div>
+            <div class="weather-content">
+                <div class="weather-left">
+                    <img src="https:${data.current.condition.icon}" alt="weather">
+                    <p style="font-size: 40px; font-weight: bold;">${Math.round(data.current.temp_c)}°C</p>
+                    <p>${data.current.condition.text}</p>
+                </div>
+                <div class="weather-right">
+                    <p>Відчувається як: ${Math.round(data.current.feelslike_c)}°C</p>
+                    <p>Вітер: ${data.current.wind_kph} км/год (${data.current.wind_dir})</p>
+                    <p>Вологість: ${data.current.humidity}%</p>
+                    <p>Ймовірність дощу: ${data.current.chance_of_rain}%</p>
+                    <p>Тиск: ${data.current.pressure_mb} мбар</p>
+                    <p>Видимість: ${data.current.vis_km} км</p>
+                </div>
+            </div>
+        `;
+        
+        weatherDiv.classList.add('visible');
     } catch (error) {
         weatherDiv.innerHTML = "";
+        weatherDiv.classList.remove('visible');
         errorDiv.textContent = "Не вдалося отримати дані. Перевірте назву міста.";
     }
 }
