@@ -71,6 +71,7 @@ async function getWeather() {
             weatherDiv.classList.add('rainy');
         }
 
+        errorDiv.textContent = "";
         weatherDiv.innerHTML = `
             <div class="weather-header"><h2>Погода в ${data.location.name}</h2></div>
             <div class="weather-content">
@@ -86,6 +87,26 @@ async function getWeather() {
                 </div>
             </div>
         `;
+        weatherDiv.classList.add('visible');
+
+
+        forecastContainer.innerHTML = '';
+        forecastData.forecast.forecastday.forEach(day => {
+            const date = new Date(day.date).toLocaleDateString('uk-UA', { weekday: 'long' });
+
+            forecastContainer.innerHTML += `
+    <div class="day-card">
+        <h4>${date}</h4>
+        <img src="https:${day.day.condition.icon}" style="width: 50px;">
+        <p style="font-size: 24px; font-weight: bold;">${Math.round(day.day.avgtemp_c)}°C</p>
+        <p style="font-size: 14px; color: var(--text-200);">${day.day.condition.text}</p>
+        <hr style="border: 0; border-top: 1px solid #444; margin: 10px 0;">
+        <p>💧 ${day.day.daily_chance_of_rain}%</p>
+        <p>💨 ${Math.round(day.day.maxwind_kph)} км/год</p>
+    </div>
+`;
+        });
+
     } catch (error) {
         weatherDiv.innerHTML = "";
         weatherDiv.classList.remove('visible');
