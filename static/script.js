@@ -1,18 +1,17 @@
 const API_KEY = "a85e06d2a31c43d9bc4135230263005"
-
 async function searchCities() {
-
+    document.querySelector('#cities').innerHTML = '';
     const city = document.getElementById('searchInput').value || document.getElementById('cities').value;
-
+    if (!city) return;
     try {
         const url = `http://api.weatherapi.com/v1/search.json?q=${city}&key=${API_KEY}`;
         const response = await fetch(url);
-        
+
         if (!response.ok) throw new Error("Місто не знайдено");
 
         const data = await response.json();
         data.forEach(location => {
-          document.querySelector('#cities').innerHTML += `<option value="${location.name}">${location.name}, ${location.country}</option>`;
+            document.querySelector('#cities').innerHTML += `<option value="${location.name}">${location.name}, ${location.country}</option>`;
         });
         document.querySelector('#cities')
     } catch (error) {
@@ -30,8 +29,11 @@ function debounce(func, timeout = 500) {
     };
 }
 
+const debouncedSearch = debounce(() => {
+    searchCities();
+}, 500);
 
-
+document.getElementById('searchInput').addEventListener('input', debouncedSearch);
 
 async function getWeather() {
 
@@ -40,17 +42,19 @@ async function getWeather() {
     try {
         const url = `http://api.weatherapi.com/v1/current.json?q=${city}&key=${API_KEY}`;
         const response = await fetch(url);
-        
+
         if (!response.ok) throw new Error("Місто не знайдено");
 
         const data = await response.json();
-        document.querySelector('.weather').innerHTML = `
-            <h2>Погода в ${data.location.name}</h2>
-            <p style="font-size: 24px;">${Math.round(data.current.temp_c)}°C</p>
-            <p>${data.current.condition.text}</p>
-            <p>Вологість: ${data.current.humidity}%</p>
-            <p>Хмарність: ${data.current.cloud}%</p>
-        `;
+document.querySelector('.weather').innerHTML = `
+        <h2>Погода в ${data.location.name}</h2>
+        <img src="https:${data.current.condition.icon}" alt="weather">
+        <p style="font-size: 32px;">${Math.round(data.current.temp_c)}°C</p>
+        <p>Відчувається як: ${Math.round(data.current.feelslike_c)}°C</p>
+        <p>Вітер: ${data.current.wind_kph} км/год (${data.current.wind_dir})</p>
+        <p>Вологість: ${data.current.humidity}%</p>
+        <p>Ймовірність дощу: ${data.current.chance_of_rain}%</p>
+    `;
     } catch (error) {
         console.error(error);
     }
