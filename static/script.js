@@ -47,14 +47,25 @@ async function getWeather() {
 
         const data = await response.json();
 document.querySelector('.weather').innerHTML = `
+    <div class="weather-header">
         <h2>Погода в ${data.location.name}</h2>
-        <img src="https:${data.current.condition.icon}" alt="weather">
-        <p style="font-size: 32px;">${Math.round(data.current.temp_c)}°C</p>
-        <p>Відчувається як: ${Math.round(data.current.feelslike_c)}°C</p>
-        <p>Вітер: ${data.current.wind_kph} км/год (${data.current.wind_dir})</p>
-        <p>Вологість: ${data.current.humidity}%</p>
-        <p>Ймовірність дощу: ${data.current.chance_of_rain}%</p>
-    `;
+    </div>
+    <div class="weather-content">
+        <div class="weather-left">
+            <img src="https:${data.current.condition.icon}" alt="weather" style="width: 100px;">
+            <p style="font-size: 40px; font-weight: bold;">${Math.round(data.current.temp_c)}°C</p>
+            <p>${data.current.condition.text}</p>
+        </div>
+        <div class="weather-right">
+            <p>Відчувається як: ${Math.round(data.current.feelslike_c)}°C</p>
+            <p>Вітер: ${data.current.wind_kph} км/год (${data.current.wind_dir})</p>
+            <p>Вологість: ${data.current.humidity}%</p>
+            <p>Ймовірність дощу: ${data.current.chance_of_rain}%</p>
+            <p>Тиск: ${data.current.pressure_mb} мбар</p>
+            <p>Видимість: ${data.current.vis_km} км</p>
+        </div>
+    </div>
+`;
     } catch (error) {
         console.error(error);
     }
