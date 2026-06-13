@@ -1,4 +1,38 @@
-const API_KEY = "a85e06d2a31c43d9bc4135230263005"
+const map = L.map('map').setView([50.45, 30.52], 6);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+}).addTo(map);
+
+map.on('click', async (e) => {
+    const { lat, lng } = e.latlng;
+    const url = `https://api.weatherapi.com/v1/current.json?q=${lat},${lng}&key=a85e06d2a31c43d9bc4135230263005&lang=uk`;
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        searchInput.value = data.location.name;
+        getWeather();
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+const themeToggle = document.getElementById('theme-toggle');
+const searchInput = document.getElementById('searchInput');
+const datalist = document.getElementById('cities');
+const weatherDiv = document.querySelector('.weather');
+const errorDiv = document.querySelector('.error');
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
+themeToggle.checked = (savedTheme === 'dark');
+
+themeToggle.addEventListener('change', () => {
+    const newTheme = themeToggle.checked ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+});
 
 async function searchCities() {
     const input = document.getElementById('searchInput')
