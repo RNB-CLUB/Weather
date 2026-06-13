@@ -1,22 +1,4 @@
-<<<<<<< HEAD
 const API_KEY = "a85e06d2a31c43d9bc4135230263005"
-=======
-const themeToggle = document.getElementById('theme-toggle');
-const searchInput = document.getElementById('searchInput');
-const datalist = document.getElementById('cities');
-const weatherDiv = document.querySelector('.weather');
-const errorDiv = document.querySelector('.error');
-
-const savedTheme = localStorage.getItem('theme') || 'light';
-document.documentElement.setAttribute('data-theme', savedTheme);
-themeToggle.checked = (savedTheme === 'dark');
-
-themeToggle.addEventListener('change', () => {
-    const newTheme = themeToggle.checked ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-});
->>>>>>> 5d226c62fccf96b9e744aac951a22ca1ef8661c1
 
 async function searchCities() {
     const input = document.getElementById('searchInput')
@@ -26,13 +8,9 @@ async function searchCities() {
     if (city.length < 2) return
 
     try {
-        const url = `https://api.weatherapi.com/v1/search.json?q=${city}&key=a85e06d2a31c43d9bc4135230263005`;
+        const url = `https://api.weatherapi.com/v1/search.json?q=${city}&key=${API_KEY}`;
         const response = await fetch(url);
-<<<<<<< HEAD
         if (!response.ok) return;
-=======
-        if (!response.ok) throw new Error("Помилка");
->>>>>>> 5d226c62fccf96b9e744aac951a22ca1ef8661c1
 
         const data = await response.json();
         datalist.innerHTML = ''
@@ -54,12 +32,8 @@ function debounce(func, timeout = 500) {
 document.getElementById('searchInput').addEventListener('input', debounce(searchCities, 500))
 
 async function getWeather() {
-<<<<<<< HEAD
     const city = document.getElementById('searchInput').value
     const weatherDiv = document.querySelector('.weather')
-=======
-    const city = searchInput.value;
->>>>>>> 5d226c62fccf96b9e744aac951a22ca1ef8661c1
 
     if (!city) {
         weatherDiv.style.display = 'none'
@@ -67,37 +41,23 @@ async function getWeather() {
     }
 
     try {
-<<<<<<< HEAD
         const url = `https://api.weatherapi.com/v1/current.json?q=${city}&key=${API_KEY}`
-=======
-        const url = `https://api.weatherapi.com/v1/current.json?q=${city}&key=a85e06d2a31c43d9bc4135230263005&lang=uk`;
->>>>>>> 5d226c62fccf96b9e744aac951a22ca1ef8661c1
         const response = await fetch(url);
 
         if (!response.ok) throw new Error("Місто не знайдено")
 
-<<<<<<< HEAD
         const data = await response.json()
         
 
         weatherDiv.style.display = 'flex'
 
-=======
-        const data = await response.json();
-        errorDiv.textContent = ""; 
-        
->>>>>>> 5d226c62fccf96b9e744aac951a22ca1ef8661c1
         weatherDiv.innerHTML = `
             <div class="weather-header">
                 <h2>Погода в ${data.location.name}</h2>
             </div>
             <div class="weather-content">
                 <div class="weather-left">
-<<<<<<< HEAD
                     <img src="https:${data.current.condition.icon}" alt="weather" style="width: 100px;">
-=======
-                    <img src="https:${data.current.condition.icon}" alt="weather">
->>>>>>> 5d226c62fccf96b9e744aac951a22ca1ef8661c1
                     <p style="font-size: 40px; font-weight: bold;">${Math.round(data.current.temp_c)}°C</p>
                     <p>${data.current.condition.text}</p>
                 </div>
@@ -111,19 +71,10 @@ async function getWeather() {
                 </div>
             </div>
         `;
-<<<<<<< HEAD
     } catch (error) {
         console.error(error);
         weatherDiv.style.display = 'none'
         alert("Місто не знайдено або сталася помилка")
-=======
-        
-        weatherDiv.classList.add('visible');
-    } catch (error) {
-        weatherDiv.innerHTML = "";
-        weatherDiv.classList.remove('visible');
-        errorDiv.textContent = "Не вдалося отримати дані. Перевірте назву міста.";
->>>>>>> 5d226c62fccf96b9e744aac951a22ca1ef8661c1
     }
 }
 

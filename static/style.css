@@ -97,6 +97,40 @@ button:hover {
     max-width: 600px;
     margin: 50px auto 0 auto;
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    width: 90%;
+    max-width: 700px;
+    margin: 50px auto 0 auto;
+    display: none;
+}
+
+.weather-header {
+    text-align: left;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--accent-100);
+    padding-bottom: 10px;
+}
+
+.weather-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+}
+
+.weather-left {
+    flex: 1;
+    text-align: center;
+}
+
+.weather-right {
+    flex: 2;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .weather.visible {
