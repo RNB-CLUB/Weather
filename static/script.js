@@ -1,25 +1,40 @@
-const API_KEY = "a85e06d2a31c43d9bc4135230263005"
-async function searchCities() {
-    document.querySelector('#cities').innerHTML = '';
-    const city = document.getElementById('searchInput').value || document.getElementById('cities').value;
-    if (!city) return;
-    try {
-        const url = `http://api.weatherapi.com/v1/search.json?q=${city}&key=${API_KEY}`;
-        const response = await fetch(url);
+const themeToggle = document.getElementById('theme-toggle');
 
-        if (!response.ok) throw new Error("Місто не знайдено");
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
+themeToggle.checked = (savedTheme === 'dark');
+
+themeToggle.addEventListener('change', () => {
+    const newTheme = themeToggle.checked ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+});
+
+const API_KEY = "a85e06d2a31c43d9bc4135230263005";
+const searchInput = document.getElementById('searchInput');
+const datalist = document.getElementById('cities');
+
+async function searchCities() {
+    const city = searchInput.value;
+    if (city.length < 3) return;
+
+    try {
+        const url = `https://api.weatherapi.com/v1/search.json?q=${city}&key=${API_KEY}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Помилка запиту");
 
         const data = await response.json();
+        datalist.innerHTML = '';
         data.forEach(location => {
-            document.querySelector('#cities').innerHTML += `<option value="${location.name}">${location.name}, ${location.country}</option>`;
+            const option = document.createElement('option');
+            option.value = location.name;
+            option.textContent = `${location.name}, ${location.country}`;
+            datalist.appendChild(option);
         });
-        document.querySelector('#cities')
     } catch (error) {
         console.error(error);
     }
 }
-
-document.getElementById('searchInput').addEventListener('input', searchCities);
 
 function debounce(func, timeout = 500) {
     let timer;
@@ -29,18 +44,20 @@ function debounce(func, timeout = 500) {
     };
 }
 
-const debouncedSearch = debounce(() => {
-    searchCities();
-}, 500);
-
-document.getElementById('searchInput').addEventListener('input', debouncedSearch);
+searchInput.addEventListener('input', debounce(searchCities, 500));
 
 async function getWeather() {
+    const city = searchInput.value;
+    const weatherDiv = document.querySelector('.weather');
+    const errorDiv = document.querySelector('.error');
 
-    const city = document.getElementById('searchInput').value || document.getElementById('cities').value;
+    if (!city) {
+        errorDiv.textContent = "Будь ласка, введіть назву міста";
+        return;
+    }
 
     try {
-        const url = `http://api.weatherapi.com/v1/current.json?q=${city}&key=${API_KEY}`;
+        const url = `https://api.weatherapi.com/v1/current.json?q=${city}&key=${API_KEY}&lang=uk`;
         const response = await fetch(url);
 
         if (!response.ok) throw new Error("Місто не знайдено");
@@ -67,10 +84,12 @@ document.querySelector('.weather').innerHTML = `
     </div>
 `;
     } catch (error) {
-        console.error(error);
+        weatherDiv.innerHTML = "";
+        errorDiv.textContent = "Не вдалося отримати дані. Перевірте назву міста.";
     }
 }
 
+<<<<<<< HEAD
 async function getWeather() {
     const city = document.querySelector("searchInput").value || document.querySelector("#cities").value;
     if(!city)
@@ -103,6 +122,8 @@ async function getWeather() {
 
 
 
+=======
+>>>>>>> 9cf9ea357e0ca2522d721bf2b3268c45f350423d
 // const button = document.getElementById("getWeather");
 // const input = document.getElementById("cityInput");
 // const resultDiv = document.getElementById("result");
