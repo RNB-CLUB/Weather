@@ -35,61 +35,63 @@ themeToggle.addEventListener('change', () => {
 });
 
 async function searchCities() {
-    const city = searchInput.value;
-    if (city.length < 3) return;
+    const input = document.getElementById('searchInput')
+    const datalist = document.querySelector('#cities')
+    const city = input.value;
+    
+    if (city.length < 2) return
 
     try {
-        const url = `https://api.weatherapi.com/v1/search.json?q=${city}&key=a85e06d2a31c43d9bc4135230263005`;
+        const url = `https://api.weatherapi.com/v1/search.json?q=${city}&key=${API_KEY}`;
         const response = await fetch(url);
-        if (!response.ok) throw new Error("Помилка");
+        if (!response.ok) return;
 
         const data = await response.json();
-        datalist.innerHTML = '';
+        datalist.innerHTML = ''
         data.forEach(location => {
-            const option = document.createElement('option');
-            option.value = location.name;
-            option.textContent = `${location.name}, ${location.country}`;
-            datalist.appendChild(option);
+            datalist.innerHTML += `<option value="${location.name}">${location.name}, ${location.country}</option>`
         });
     } catch (error) {
-        console.error(error);
+        console.error(error)
     }
 }
 
 function debounce(func, timeout = 500) {
-    let timer;
+    let timer
     return (...args) => {
         clearTimeout(timer);
-        timer = setTimeout(() => { func.apply(this, args); }, timeout);
+        timer = setTimeout(() => { func.apply(this, args); }, timeout)
     };
 }
-
-searchInput.addEventListener('input', debounce(searchCities, 500));
+document.getElementById('searchInput').addEventListener('input', debounce(searchCities, 500))
 
 async function getWeather() {
-    const city = searchInput.value;
+    const city = document.getElementById('searchInput').value
+    const weatherDiv = document.querySelector('.weather')
 
     if (!city) {
-        errorDiv.textContent = "Будь ласка, введіть назву міста";
-        return;
+        weatherDiv.style.display = 'none'
+        return
     }
 
     try {
-        const url = `https://api.weatherapi.com/v1/current.json?q=${city}&key=a85e06d2a31c43d9bc4135230263005&lang=uk`;
+        const url = `https://api.weatherapi.com/v1/current.json?q=${city}&key=${API_KEY}`
         const response = await fetch(url);
 
-        if (!response.ok) throw new Error("Місто не знайдено");
+        if (!response.ok) throw new Error("Місто не знайдено")
 
-        const data = await response.json();
-        errorDiv.textContent = ""; 
+        const data = await response.json()
         
+
+        weatherDiv.style.display = 'flex'
+
         weatherDiv.innerHTML = `
             <div class="weather-header">
                 <h2>Погода в ${data.location.name}</h2>
             </div>
             <div class="weather-content">
                 <div class="weather-left">
-                    <img src="https:${data.current.condition.icon}" alt="weather">
+                    <img src="https:${data.current.condition.icon}" alt="weather" style="width: 100px;">
                     <p style="font-size: 40px; font-weight: bold;">${Math.round(data.current.temp_c)}°C</p>
                     <p>${data.current.condition.text}</p>
                 </div>
@@ -103,14 +105,38 @@ async function getWeather() {
                 </div>
             </div>
         `;
-        
-        weatherDiv.classList.add('visible');
     } catch (error) {
-        weatherDiv.innerHTML = "";
-        weatherDiv.classList.remove('visible');
-        errorDiv.textContent = "Не вдалося отримати дані. Перевірте назву міста.";
+        console.error(error);
+        weatherDiv.style.display = 'none'
+        alert("Місто не знайдено або сталася помилка")
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // const button = document.getElementById("getWeather");
 // const input = document.getElementById("cityInput");
