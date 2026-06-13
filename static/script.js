@@ -71,6 +71,10 @@ document.querySelector('.weather').innerHTML = `
     }
 }
 
+async function getWeather() {
+    const city = document.querySelector("searchInput").value || document.querySelector("#cities").value;
+    if(!city)
+}
 
 
 
