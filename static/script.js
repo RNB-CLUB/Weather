@@ -68,6 +68,7 @@ document.getElementById('searchInput').addEventListener('input', debounce(search
 async function getWeather() {
     const city = document.getElementById('searchInput').value
     const weatherDiv = document.querySelector('.weather')
+    console.log("Шукаємо погоду для:", city); 
 
     if (!city) {
         weatherDiv.style.display = 'none'
