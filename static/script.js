@@ -1,23 +1,3 @@
-const map = L.map('map').setView([50.45, 30.52], 6);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap'
-}).addTo(map);
-
-map.on('click', async (e) => {
-    const { lat, lng } = e.latlng;
-    const url = `https://api.weatherapi.com/v1/current.json?q=${lat},${lng}&key=a85e06d2a31c43d9bc4135230263005&lang=uk`;
-    
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        searchInput.value = data.location.name;
-        getWeather();
-    } catch (error) {
-        console.error(error);
-    }
-});
-
 const themeToggle = document.getElementById('theme-toggle');
 const searchInput = document.getElementById('searchInput');
 const datalist = document.getElementById('cities');
@@ -35,152 +15,96 @@ themeToggle.addEventListener('change', () => {
 });
 
 async function searchCities() {
-    const input = document.getElementById('searchInput')
-    const datalist = document.querySelector('#cities')
-    const city = input.value;
-    
-    if (city.length < 2) return
+    const city = searchInput.value;
+    if (city.length < 3) return;
 
     try {
-        const url = `https://api.weatherapi.com/v1/search.json?q=${city}&key=${API_KEY}`;
+        const url = `https://api.weatherapi.com/v1/search.json?q=${city}&key=a85e06d2a31c43d9bc4135230263005`;
         const response = await fetch(url);
-        if (!response.ok) return;
+        if (!response.ok) throw new Error("Помилка");
 
         const data = await response.json();
-        datalist.innerHTML = ''
+        datalist.innerHTML = '';
         data.forEach(location => {
-            datalist.innerHTML += `<option value="${location.name}">${location.name}, ${location.country}</option>`
+            const option = document.createElement('option');
+            option.value = location.name;
+            option.textContent = `${location.name}, ${location.country}`;
+            datalist.appendChild(option);
         });
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
 }
 
 function debounce(func, timeout = 500) {
-    let timer
+    let timer;
     return (...args) => {
         clearTimeout(timer);
-        timer = setTimeout(() => { func.apply(this, args); }, timeout)
+        timer = setTimeout(() => { func.apply(this, args); }, timeout);
     };
 }
-document.getElementById('searchInput').addEventListener('input', debounce(searchCities, 500))
+
+searchInput.addEventListener('input', debounce(searchCities, 500));
 
 async function getWeather() {
-    const city = document.getElementById('searchInput').value
-    const weatherDiv = document.querySelector('.weather')
-    console.log("Шукаємо погоду для:", city); 
+    const city = searchInput.value;
+    const forecastContainer = document.getElementById('forecastContainer');
 
     if (!city) {
-        weatherDiv.style.display = 'none'
-        return
+        errorDiv.textContent = "Будь ласка, введіть назву міста";
+        return;
     }
 
     try {
-        const url = `https://api.weatherapi.com/v1/current.json?q=${city}&key=${API_KEY}`
-        const response = await fetch(url);
+        const currentUrl = `https://api.weatherapi.com/v1/current.json?q=${city}&key=a85e06d2a31c43d9bc4135230263005&lang=uk`;
+        const currentResponse = await fetch(currentUrl);
+        if (!currentResponse.ok) throw new Error("Місто не знайдено");
+        const currentData = await currentResponse.json();
 
-        if (!response.ok) throw new Error("Місто не знайдено")
+        const forecastUrl = `https://api.weatherapi.com/v1/forecast.json?q=${city}&days=3&key=a85e06d2a31c43d9bc4135230263005&lang=uk`;
+        const forecastResponse = await fetch(forecastUrl);
+        const forecastData = await forecastResponse.json();
 
-        const data = await response.json()
-        
-
-        weatherDiv.style.display = 'flex'
-
+        errorDiv.textContent = "";
         weatherDiv.innerHTML = `
-            <div class="weather-header">
-                <h2>Погода в ${data.location.name}</h2>
-            </div>
+            <div class="weather-header"><h2>Погода в ${currentData.location.name}</h2></div>
             <div class="weather-content">
                 <div class="weather-left">
-                    <img src="https:${data.current.condition.icon}" alt="weather" style="width: 100px;">
-                    <p style="font-size: 40px; font-weight: bold;">${Math.round(data.current.temp_c)}°C</p>
-                    <p>${data.current.condition.text}</p>
+                    <img src="https:${currentData.current.condition.icon}" alt="weather">
+                    <p style="font-size: 40px; font-weight: bold;">${Math.round(currentData.current.temp_c)}°C</p>
+                    <p>${currentData.current.condition.text}</p>
                 </div>
                 <div class="weather-right">
-                    <p>Відчувається як: ${Math.round(data.current.feelslike_c)}°C</p>
-                    <p>Вітер: ${data.current.wind_kph} км/год (${data.current.wind_dir})</p>
-                    <p>Вологість: ${data.current.humidity}%</p>
-                    <p>Ймовірність дощу: ${data.current.chance_of_rain}%</p>
-                    <p>Тиск: ${data.current.pressure_mb} мбар</p>
-                    <p>Видимість: ${data.current.vis_km} км</p>
+                    <p>Відчувається як: ${Math.round(currentData.current.feelslike_c)}°C</p>
+                    <p>Вітер: ${currentData.current.wind_kph} км/год</p>
+                    <p>Вологість: ${currentData.current.humidity}%</p>
                 </div>
             </div>
         `;
+        weatherDiv.classList.add('visible');
+
+
+        forecastContainer.innerHTML = '';
+        forecastData.forecast.forecastday.forEach(day => {
+            const date = new Date(day.date).toLocaleDateString('uk-UA', { weekday: 'long' });
+
+            forecastContainer.innerHTML += `
+    <div class="day-card">
+        <h4>${date}</h4>
+        <img src="https:${day.day.condition.icon}" style="width: 50px;">
+        <p style="font-size: 24px; font-weight: bold;">${Math.round(day.day.avgtemp_c)}°C</p>
+        <p style="font-size: 14px; color: var(--text-200);">${day.day.condition.text}</p>
+        <hr style="border: 0; border-top: 1px solid #444; margin: 10px 0;">
+        <p>💧 ${day.day.daily_chance_of_rain}%</p>
+        <p>💨 ${Math.round(day.day.maxwind_kph)} км/год</p>
+    </div>
+`;
+        });
+
     } catch (error) {
-        console.error(error);
-        weatherDiv.style.display = 'none'
-        alert("Місто не знайдено або сталася помилка")
+        weatherDiv.innerHTML = "";
+        weatherDiv.classList.remove('visible');
+        forecastContainer.innerHTML = "";
+        errorDiv.textContent = "Не вдалося отримати дані.";
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const button = document.getElementById("getWeather");
-// const input = document.getElementById("cityInput");
-// const resultDiv = document.getElementById("result");
-
-
-// let weather;
-// fetch(base_url + "&q=london").then(res => res.json()).then(data => {
-//     weather = data
-//     updateWeather()
-// }
-// )
-
-// function updateWeather() {
-//     document.querySelector(".current-weather .icon").setAttribute("src", weather.current.condition.icon)
-// }
-// button.addEventListener("click", async () => {
-//   const cityName = input.value.trim();
-
-//   if (cityName === "") {
-//     resultDiv.innerHTML = "Пожалуйста, введите название города";
-//     return;
-//   }
-
-//   resultDiv.innerHTML = "Загрузка...";
-
-//   try {
-//     const response = await fetch(`/api/weather?city=${cityName}`);
-//     const data = await response.json();
-
-//     if (response.ok) {
-//       resultDiv.innerHTML = `
-//                 <div style="margin-top: 15px;">
-//                     <h3>Погода в: ${data.city}</h3>
-//                     <img src="https:${data.icon}" alt="Иконка погоды">
-//                     <p style="font-size: 24px; font-weight: bold;">${Math.round(data.temp)}°C</p>
-//                     <p>На улице: ${data.description}</p>
-//                 </div>
-//             `;
-//     } else {
-//       resultDiv.innerHTML = `Ошибка: ${data.message}`;
-//     }
-//   } catch (error) {
-//     resultDiv.innerHTML = "Не удалось связаться с сервером";
-//   }
-// });
