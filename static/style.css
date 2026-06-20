@@ -344,16 +344,14 @@ input:checked + .slider:before { transform: translateX(27px); }
 .weather.sunny .weather-header,
 .weather.cloudy .weather-header,
 .weather.rainy .weather-header {
-    border-bottom-color: currentColor;
+    border-color: currentColor;
+    opacity: 0.9; /* Трохи підвищив видимість ліній */
 }
 
-.weather.sunny .weather-header h2 {
-    color: #000000;
-}
-
+.weather.sunny .weather-header h2,
 .weather.cloudy .weather-header h2,
 .weather.rainy .weather-header h2 {
-    color: #FFFFFF;
+    color: inherit;
 }
 
 .weather.sunny .weather-right {
@@ -362,11 +360,14 @@ input:checked + .slider:before { transform: translateX(27px); }
     color: #000000;
 }
 
+.weather.sunny .weather-right,
 .weather.cloudy .weather-right,
 .weather.rainy .weather-right {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: #FFFFFF;
+    /* Напівпрозорий білий/темний фон для панелей для кращого читання */
+    background: rgba(255, 255, 255, 0.25);
+    border-color: transparent;
+    color: inherit;
+    backdrop-filter: blur(4px); /* Додано ефект скла для сучасності */
 }
 
 .weather.sunny .weather-right b {
@@ -382,9 +383,18 @@ input:checked + .slider:before { transform: translateX(27px); }
     border-bottom-color: rgba(0, 0, 0, 0.15);
 }
 
+.weather.sunny .weather-right p,
 .weather.cloudy .weather-right p,
 .weather.rainy .weather-right p {
-    border-bottom-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(0, 0, 0, 0.15);
+    color: inherit;
+}
+
+.weather.sunny .weather-right b,
+.weather.cloudy .weather-right b,
+.weather.rainy .weather-right b {
+    color: inherit;
+    filter: brightness(0.85);
 }
 
 .weather.sunny .sun-schedule {
@@ -395,9 +405,9 @@ input:checked + .slider:before { transform: translateX(27px); }
 
 .weather.cloudy .sun-schedule,
 .weather.rainy .sun-schedule {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
-    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: transparent;
+    color: inherit;
 }
 
 .weather.sunny .forecast-container {
@@ -405,6 +415,8 @@ input:checked + .slider:before { transform: translateX(27px); }
     border-top-color: rgba(0, 0, 0, 0.15);
 }
 
+/* Блок прогнозу (3 дні) */
+.weather.sunny .forecast-container,
 .weather.cloudy .forecast-container,
 .weather.rainy .forecast-container {
     background-color: rgba(255, 255, 255, 0.25);
@@ -417,28 +429,27 @@ input:checked + .slider:before { transform: translateX(27px); }
     border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.weather.sunny .day-card,
 .weather.cloudy .day-card,
 .weather.rainy .day-card {
-    background: rgba(255, 255, 255, 0.1);
-    color: #FFFFFF;
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.2);
+    color: inherit;
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.weather.sunny .day-card:hover {
-    background: rgba(0, 0, 0, 0.12);
-}
-
+.weather.sunny .day-card:hover,
 .weather.cloudy .day-card:hover,
 .weather.rainy .day-card:hover {
-    background: rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.4);
 }
 
-.weather.sunny .day-card h4 {
-    color: #0D47A1;
-}
-
+.weather.sunny .day-card h4,
 .weather.cloudy .day-card h4,
 .weather.rainy .day-card h4 {
-    color: #FFFFFF;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    color: inherit;
+    font-weight: bold;
 }
+Що саме змінилося:
+Палітра кольорів: Градієнти стали більш насиченими, але водночас приємними для очей. Занадто «кислотний» жовтий замінено на м'якший FFF9C4, а дощовий блакитний став глибшим.
+
+Читабельність тексту: Оскільки білий текст на світлому жовтому фоні (сонячна погода) чит
