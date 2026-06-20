@@ -1,8 +1,12 @@
+const API_KEY = "a85e06d2a31c43d9bc4135230263005";
+
 const themeToggle = document.getElementById('theme-toggle');
 const searchInput = document.getElementById('searchInput');
 const datalist = document.getElementById('cities');
 const weatherDiv = document.querySelector('.weather');
 const errorDiv = document.querySelector('.error');
+const mainWeatherContent = document.getElementById('mainWeatherContent');
+const forecastContainer = document.getElementById('forecastContainer');
 
 document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -20,7 +24,7 @@ async function searchCities() {
     const city = searchInput.value;
     if (city.length < 3) return;
     try {
-        const url = `https://api.weatherapi.com/v1/search.json?q=${city}&key=a85e06d2a31c43d9bc4135230263005`;
+        const url = `https://api.weatherapi.com/v1/search.json?q=${city}&key=${API_KEY}`;
         const response = await fetch(url);
         if (!response.ok) throw new Error("Помилка");
         const data = await response.json();
@@ -44,25 +48,31 @@ function debounce(func, timeout = 500) {
     };
 }
 
-searchInput.addEventListener('input', debounce(searchCities, 500))
+searchInput.addEventListener('input', debounce(searchCities, 500));
 
 async function getWeather() {
     const city = searchInput.value;
+    
     if (!city) {
         errorDiv.textContent = "Будь ласка, введіть назву міста";
+        if (weatherDiv) weatherDiv.style.display = 'none';
         return;
     }
+
     try {
-        const url = `https://api.weatherapi.com/v1/current.json?q=${city}&key=a85e06d2a31c43d9bc4135230263005&lang=uk`;
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Місто не знайдено");
-        
-        const data = await response.json();
+        const currentUrl = `https://api.weatherapi.com/v1/current.json?q=${city}&key=${API_KEY}&lang=uk`;
+        const currentResponse = await fetch(currentUrl);
+        if (!currentResponse.ok) throw new Error("Місто не знайдено");
+        const data = await currentResponse.json();
+
+        const forecastUrl = `https://api.weatherapi.com/v1/forecast.json?q=${city}&days=3&key=${API_KEY}&lang=uk`;
+        const forecastResponse = await fetch(forecastUrl);
+        const forecastData = await forecastResponse.json();
+
         errorDiv.textContent = "";
 
-        weatherDiv.className = 'weather visible'; 
         const conditionText = data.current.condition.text.toLowerCase();
-        
+        weatherDiv.classList.remove('sunny', 'cloudy', 'rainy');
         if (conditionText.includes('сонце') || conditionText.includes('clear')) {
             weatherDiv.classList.add('sunny');
         } else if (conditionText.includes('хмар') || conditionText.includes('cloud')) {
@@ -71,45 +81,54 @@ async function getWeather() {
             weatherDiv.classList.add('rainy');
         }
 
-        errorDiv.textContent = "";
-        weatherDiv.innerHTML = `
+        const currentForecast = forecastData.forecast.forecastday[0]?.day || {};
+
+        mainWeatherContent.innerHTML = `
             <div class="weather-header"><h2>Погода в ${data.location.name}</h2></div>
             <div class="weather-content">
                 <div class="weather-left">
                     <img src="https:${data.current.condition.icon}" alt="weather">
-                    <p style="font-size: 40px; font-weight: bold;">${Math.round(data.current.temp_c)}°C</p>
-                    <p>${data.current.condition.text}</p>
+                    <p style="font-size: 45px; font-weight: bold;">${Math.round(data.current.temp_c)}°C</p>
+                    <p style="font-weight: 500;">${data.current.condition.text}</p>
                 </div>
                 <div class="weather-right">
-                    <p>Відчувається як: ${Math.round(data.current.feelslike_c)}°C</p>
-                    <p>Вітер: ${data.current.wind_kph} км/год</p>
-                    <p>Вологість: ${data.current.humidity}%</p>
+                    <p>Відчувається як: <b>${Math.round(data.current.feelslike_c)}°C</b></p>
+                    <p>Вітер: <b>${data.current.wind_kph} км/год</b> (${data.current.wind_dir})</p>
+                    <p>Вологість: <b>${data.current.humidity}%</b></p>
+                    <p>Ймовірність дощу: <b>${currentForecast.daily_chance_of_rain || 0}%</b></p>
+                    <p>Тиск: <b>${data.current.pressure_mb} мбар</b></p>
+                    <p>УФ-індекс: <b>${data.current.uv}</b></p>
+                    <p>Видимість: <b>${data.current.vis_km} км</b></p>
                 </div>
             </div>
         `;
-        weatherDiv.classList.add('visible');
-
 
         forecastContainer.innerHTML = '';
+        
         forecastData.forecast.forecastday.forEach(day => {
             const date = new Date(day.date).toLocaleDateString('uk-UA', { weekday: 'long' });
 
             forecastContainer.innerHTML += `
-    <div class="day-card">
-        <h4>${date}</h4>
-        <img src="https:${day.day.condition.icon}" style="width: 50px;">
-        <p style="font-size: 24px; font-weight: bold;">${Math.round(day.day.avgtemp_c)}°C</p>
-        <p style="font-size: 14px; color: var(--text-200);">${day.day.condition.text}</p>
-        <hr style="border: 0; border-top: 1px solid #444; margin: 10px 0;">
-        <p>💧 ${day.day.daily_chance_of_rain}%</p>
-        <p>💨 ${Math.round(day.day.maxwind_kph)} км/год</p>
-    </div>
-`;
+                <div class="day-card">
+                    <h4>${date}</h4>
+                    <img src="https:${day.day.condition.icon}" style="width: 40px; margin: 0 auto;">
+                    <p style="font-size: 20px; font-weight: bold;">${Math.round(day.day.avgtemp_c)}°C</p>
+                    <p style="font-size: 12px;">${day.day.condition.text}</p>
+                    <div style="border-top: 1px dashed #888; padding-top: 4px; margin-top: 2px;">
+                        <p>💧 ${day.day.daily_chance_of_rain}%</p>
+                        <p>💨 ${Math.round(day.day.maxwind_kph)} км/год</p>
+                    </div>
+                </div>
+            `;
         });
 
+        weatherDiv.classList.add('visible');
+
     } catch (error) {
-        weatherDiv.innerHTML = "";
-        weatherDiv.classList.remove('visible');
+        console.error(error);
+        mainWeatherContent.innerHTML = "";
+        forecastContainer.innerHTML = "";
+        weatherDiv.style.display = 'none';
         errorDiv.textContent = "Не вдалося отримати дані.";
     }
 }
