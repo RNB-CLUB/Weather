@@ -85,6 +85,7 @@ async function getWeather() {
 
         const currentForecast = forecastData.forecast.forecastday[0]?.day || {};
         const astroData = forecastData.forecast.forecastday[0]?.astro || { sunrise: '--:--', sunset: '--:--' };
+        
 
         mainWeatherContent.innerHTML = `
             <div class="weather-header"><h2>Погода в ${data.location.name}</h2></div>

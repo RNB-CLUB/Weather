@@ -267,7 +267,6 @@ button:hover {
 input:checked + .slider { background-color: var(--primary-100); }
 input:checked + .slider:before { transform: translateX(27px); }
 
-/* Блок прогнозу (3 дні) */
 .forecast-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
