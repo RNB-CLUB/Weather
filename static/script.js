@@ -58,7 +58,6 @@ async function getWeather() {
         if (weatherDiv) weatherDiv.style.display = 'none';
         return;
     }
-
     try {
         weatherDiv.style.display = 'flex'
         const currentUrl = `https://api.weatherapi.com/v1/current.json?q=${city}&key=${API_KEY}&lang=uk`;
@@ -68,6 +67,7 @@ async function getWeather() {
 
         const forecastUrl = `https://api.weatherapi.com/v1/forecast.json?q=${city}&days=3&key=${API_KEY}&lang=uk`;
         const forecastResponse = await fetch(forecastUrl);
+        if (!forecastResponse.ok) throw new Error("Прогноз недоступний");
         const forecastData = await forecastResponse.json();
 
         errorDiv.textContent = "";
@@ -143,3 +143,11 @@ async function getWeather() {
         errorDiv.style.display = 'block'
     }
 }
+
+searchInput.addEventListener('change', getWeather);
+
+searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        getWeather();
+    }
+});
