@@ -44,7 +44,7 @@ function debounce(func, timeout = 500) {
     };
 }
 
-searchInput.addEventListener('input', debounce(searchCities, 500));
+searchInput.addEventListener('input', debounce(searchCities, 500))
 
 async function getWeather() {
     const city = searchInput.value;
