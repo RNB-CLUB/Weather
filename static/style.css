@@ -204,7 +204,6 @@ button:hover {
     color: var(--accent-100);
 }
 
-/* Блок сходу/заходу сонця */
 .sun-schedule {
     display: flex;
     justify-content: space-around;
@@ -319,31 +318,30 @@ input:checked + .slider:before { transform: translateX(27px); }
     padding: 10px 20px;
     border-radius: 12px;
     width: 100%;
+    display: none;
 }
 
-/* Насичені та контрастні фони погоди, що перекривають картку і прогноз */
 .weather.sunny {
     background: linear-gradient(135deg, #FFB300 0%, #F57C00 100%) !important;
-    color: #000000 !important; /* Чорний текст для максимального контрасту на жовтому */
+    color: #000000 !important; 
     border-color: rgba(0, 0, 0, 0.3) !important;
     box-shadow: 0 20px 50px rgba(245, 124, 0, 0.4) !important;
 }
 
 .weather.cloudy {
     background: linear-gradient(135deg, #78909C 0%, #37474F 100%) !important;
-    color: #FFFFFF !important; /* Білий текст на темному тлі */
+    color: #FFFFFF !important; 
     border-color: rgba(255, 255, 255, 0.4) !important;
     box-shadow: 0 20px 50px rgba(55, 71, 79, 0.5) !important;
 }
 
 .weather.rainy {
     background: linear-gradient(135deg, #0288D1 0%, #01579B 100%) !important;
-    color: #FFFFFF !important; /* Білий текст на насиченому синьому */
+    color: #FFFFFF !important;
     border-color: rgba(255, 255, 255, 0.4) !important;
     box-shadow: 0 20px 50px rgba(1, 87, 155, 0.6) !important;
 }
 
-/* Адаптація заголовка всередині картки */
 .weather.sunny .weather-header,
 .weather.cloudy .weather-header,
 .weather.rainy .weather-header {
@@ -359,7 +357,6 @@ input:checked + .slider:before { transform: translateX(27px); }
     color: #FFFFFF;
 }
 
-/* Підложка для правої частини (параметри погоди) */
 .weather.sunny .weather-right {
     background: rgba(0, 0, 0, 0.08);
     border-color: rgba(0, 0, 0, 0.1);
@@ -374,15 +371,14 @@ input:checked + .slider:before { transform: translateX(27px); }
 }
 
 .weather.sunny .weather-right b {
-    color: #0D47A1; /* Темно-синій акцент на жовтому */
+    color: #0D47A1; 
 }
 
 .weather.cloudy .weather-right b,
 .weather.rainy .weather-right b {
-    color: #FFD54F; /* Яскравий акцент на темному/синьому */
+    color: #FFD54F; 
 }
 
-/* Пунктирні лінії в блоці параметрів */
 .weather.sunny .weather-right p {
     border-bottom-color: rgba(0, 0, 0, 0.15);
 }
@@ -392,7 +388,6 @@ input:checked + .slider:before { transform: translateX(27px); }
     border-bottom-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Блок сходу/заходу сонця */
 .weather.sunny .sun-schedule {
     background: rgba(0, 0, 0, 0.06);
     border-color: rgba(0, 0, 0, 0.15);
@@ -406,7 +401,6 @@ input:checked + .slider:before { transform: translateX(27px); }
     color: #FFFFFF;
 }
 
-/* Контейнер прогнозу (3 дні) */
 .weather.sunny .forecast-container {
     background-color: rgba(0, 0, 0, 0.15);
     border-top-color: rgba(0, 0, 0, 0.15);
@@ -418,7 +412,6 @@ input:checked + .slider:before { transform: translateX(27px); }
     border-top-color: rgba(255, 255, 255, 0.25);
 }
 
-/* Окремі картки днів прогнозу */
 .weather.sunny .day-card {
     background: rgba(0, 0, 0, 0.05);
     color: #000000;
