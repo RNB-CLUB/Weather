@@ -59,6 +59,8 @@ async function getWeather() {
         return;
     }
     try {
+        weatherDiv.style.display = "flex"
+        errorDiv.style.display = "none"
         const currentUrl = `https://api.weatherapi.com/v1/current.json?q=${city}&key=${API_KEY}&lang=uk`;
         const currentResponse = await fetch(currentUrl);
         if (!currentResponse.ok) throw new Error("Місто не знайдено");
@@ -135,13 +137,11 @@ async function getWeather() {
 
     } catch (error) {
         console.error(error);
-        mainWeatherContent.innerHTML = "";
-        forecastContainer.innerHTML = "";
-        weatherDiv.style.display = 'none';
-        errorDiv.textContent = "Не вдалося отримати дані.";
-        if (error.message === "Місто не знайдено") {
-            errorDiv.textContent = "Місто не знайдено. Спробуйте інше.";
-        }
+        mainWeatherContent.innerHTML = ""
+        forecastContainer.innerHTML = ""
+        weatherDiv.style.display = 'none'
+        errorDiv.textContent = "Не вдалося отримати дані."
+        errorDiv.style.display = 'block'
     }
 }
 

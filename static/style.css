@@ -204,7 +204,6 @@ button:hover {
     color: var(--accent-100);
 }
 
-/* Блок сходу/заходу сонця */
 .sun-schedule {
     display: flex;
     justify-content: space-around;
@@ -319,36 +318,29 @@ input:checked + .slider:before { transform: translateX(27px); }
     padding: 10px 20px;
     border-radius: 12px;
     width: 100%;
+    display: none;
 }
 
-
-/* --- Динамічні фони погоди --- */
-
 .weather.sunny {
-    /* Сонячно: теплий, приємний для очей жовто-помаранчевий градієнт */
-    background: linear-gradient(135deg, #FFF9C4 0%, #FBC02D 100%) !important;
-    color: #263238 !important; /* Темний контрастний текст */
-    border-color: #F57F17 !important;
-    box-shadow: 0 15px 40px rgba(251, 192, 45, 0.4) !important;
+    background: linear-gradient(135deg, #FFB300 0%, #F57C00 100%) !important;
+    color: #000000 !important; 
+    border-color: rgba(0, 0, 0, 0.3) !important;
+    box-shadow: 0 20px 50px rgba(245, 124, 0, 0.4) !important;
 }
 
 .weather.cloudy {
-    /* Хмарно: спокійні сріблясто-сталеві відтінки */
-    background: linear-gradient(135deg, #ECEFF1 0%, #607D8B 100%) !important;
-    color: #FFFFFF !important; /* Білий текст для темного фону */
-    border-color: #37474F !important;
-    box-shadow: 0 15px 40px rgba(96, 125, 139, 0.4) !important;
+    background: linear-gradient(135deg, #78909C 0%, #37474F 100%) !important;
+    color: #FFFFFF !important; 
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    box-shadow: 0 20px 50px rgba(55, 71, 79, 0.5) !important;
 }
 
 .weather.rainy {
-    /* Дощ: глибокий та насичений синій градієнт (не ріже очі) */
-    background: linear-gradient(135deg, #B3E5FC 0%, #0288D1 100%) !important;
-    color: #FFFFFF !important; /* Білий текст для читабельності */
-    border-color: #01579B !important;
-    box-shadow: 0 15px 40px rgba(2, 136, 209, 0.4) !important;
+    background: linear-gradient(135deg, #0288D1 0%, #01579B 100%) !important;
+    color: #FFFFFF !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    box-shadow: 0 20px 50px rgba(1, 87, 155, 0.6) !important;
 }
-
-/* --- Адаптація внутрішніх елементів під контрастний фон --- */
 
 .weather.sunny .weather-header,
 .weather.cloudy .weather-header,
@@ -363,11 +355,10 @@ input:checked + .slider:before { transform: translateX(27px); }
     color: inherit;
 }
 
-.weather.sunny .weather-content p, 
-.weather.sunny .weather-content h3,
-.weather.cloudy .weather-content p, 
-.weather.rainy .weather-content p {
-    color: inherit;
+.weather.sunny .weather-right {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #000000;
 }
 
 .weather.sunny .weather-right,
@@ -380,9 +371,17 @@ input:checked + .slider:before { transform: translateX(27px); }
     backdrop-filter: blur(4px); /* Додано ефект скла для сучасності */
 }
 
-/* Спеціальна адаптація для сонячного (світлого) фону, щоб підкладка панелі виділялася */
-.weather.sunny .weather-right {
-    background: rgba(0, 0, 0, 0.08); 
+.weather.sunny .weather-right b {
+    color: #0D47A1; 
+}
+
+.weather.cloudy .weather-right b,
+.weather.rainy .weather-right b {
+    color: #FFD54F; 
+}
+
+.weather.sunny .weather-right p {
+    border-bottom-color: rgba(0, 0, 0, 0.15);
 }
 
 .weather.sunny .weather-right p,
@@ -399,8 +398,12 @@ input:checked + .slider:before { transform: translateX(27px); }
     filter: brightness(0.85);
 }
 
-/* Блок сходу/заходу сонця */
-.weather.sunny .sun-schedule,
+.weather.sunny .sun-schedule {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #000000;
+}
+
 .weather.cloudy .sun-schedule,
 .weather.rainy .sun-schedule {
     background: rgba(255, 255, 255, 0.2);
@@ -408,10 +411,9 @@ input:checked + .slider:before { transform: translateX(27px); }
     color: inherit;
 }
 
-.weather.sunny .sun-item,
-.weather.cloudy .sun-item,
-.weather.rainy .sun-item {
-    color: inherit;
+.weather.sunny .forecast-container {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-top-color: rgba(0, 0, 0, 0.15);
 }
 
 /* Блок прогнозу (3 дні) */
@@ -419,8 +421,13 @@ input:checked + .slider:before { transform: translateX(27px); }
 .weather.cloudy .forecast-container,
 .weather.rainy .forecast-container {
     background-color: rgba(255, 255, 255, 0.25);
-    border-top-color: currentColor;
-    opacity: 0.95;
+    border-top-color: rgba(255, 255, 255, 0.25);
+}
+
+.weather.sunny .day-card {
+    background: rgba(0, 0, 0, 0.05);
+    color: #000000;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .weather.sunny .day-card,
