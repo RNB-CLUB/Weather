@@ -314,4 +314,5 @@ input:checked + .slider:before { transform: translateX(27px); }
     padding: 10px 20px;
     border-radius: 12px;
     width: 100%;
+    display: none;
 }
